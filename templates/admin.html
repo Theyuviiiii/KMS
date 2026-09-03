@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KMS Applications</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="admin-page">
+<div class="admin-wrap">
+  <div class="admin-head">
+    <div>
+      <div class="eyebrow">KMS — ADMIN</div>
+      <h1>Applications</h1>
+    </div>
+    <a href="/" class="back-link">← Recruitment page</a>
+  </div>
+  <div class="admin-stat">{{ applications|length }} application{{ '' if applications|length == 1 else 's' }}</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Name</th><th>Roll No.</th><th>Branch</th><th>Year</th><th>Domain</th><th>Email</th><th>Portfolio</th></tr></thead>
+      <tbody>
+      {% for a in applications %}
+        <tr>
+          <td>{{ a.id }}</td><td><strong>{{ a.name }}</strong></td><td>{{ a.roll_no }}</td>
+          <td>{{ a.branch }}</td><td>{{ a.year }}</td><td><span class="tag">{{ a.domain }}</span></td>
+          <td>{{ a.email }}</td>
+          <td>{% if a.portfolio %}<a href="{{ a.portfolio }}" target="_blank" rel="noopener">Open ↗</a>{% else %}—{% endif %}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8" class="empty">No applications yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KMS Recruitment — Join the Story</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <main class="app-shell">
+
+    <section class="intro-panel">
+      <div class="brand">
+        <div class="brand-mark">KMS</div>
+        <span>KIET Movie Society</span>
+      </div>
+
+      <div class="intro-content">
+        <div class="eyebrow">RECRUITMENT '26</div>
+        <h1>Every story<br>needs <span>you.</span></h1>
+        <p>Lights. Camera. Creativity. Tell us where you belong and become part of the team behind the next frame.</p>
+
+        <div class="film-strip" aria-hidden="true">
+          <span>●</span><span>●</span><span>●</span><span>●</span><span>●</span>
+        </div>
+      </div>
+
+      <div class="intro-footer">
+        <span>01 — 04</span>
+        <span>TAKE YOUR SHOT →</span>
+      </div>
+    </section>
+
+    <section class="form-panel">
+      <div class="topbar">
+        <span class="mobile-brand">KMS</span>
+        <div class="progress-wrap">
+          <div class="progress-label"><span id="stepLabel">STEP 01</span><span>04</span></div>
+          <div class="progress"><div id="progressBar"></div></div>
+        </div>
+      </div>
+
+      <form id="recruitmentForm">
+        <!-- STEP 1 -->
+        <div class="step active" data-step="1">
+          <div class="step-heading">
+            <span class="step-no">01</span>
+            <div>
+              <h2>Tell us about you.</h2>
+              <p>Let's start with the basics.</p>
+            </div>
+          </div>
+
+          <div class="field-grid">
+            <label class="field full">
+              <span>Full Name *</span>
+              <input name="name" type="text" placeholder="Your name" required>
+            </label>
+
+            <label class="field">
+              <span>Roll Number *</span>
+              <input name="roll_no" type="text" placeholder="2025..." required>
+            </label>
+
+            <label class="field">
+              <span>Year *</span>
+              <select name="year" required>
+                <option value="" selected disabled>Select year</option>
+                <option>1st Year</option>
+                <option>2nd Year</option>
+                <option>3rd Year</option>
+                <option>4th Year</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Branch *</span>
+              <input name="branch" type="text" placeholder="CSE / AIML / ECE..." required>
+            </label>
+
+            <label class="field">
+              <span>Phone *</span>
+              <input name="phone" type="tel" placeholder="+91 98765 43210" required>
+            </label>
+
+            <label class="field full">
+              <span>Email *</span>
+              <input name="email" type="email" placeholder="you@example.com" required>
+            </label>
+          </div>
+
+          <button type="button" class="next-btn">Continue <span>→</span></button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step" data-step="2">
+          <div class="step-heading">
+            <span class="step-no">02</span>
+            <div>
+              <h2>Choose your frame.</h2>
+              <p>Which KMS domain feels like home?</p>
+            </div>
+          </div>
+
+          <div class="domain-list">
+            {% for domain in domains %}
+            <label class="domain-option">
+              <input type="radio" name="domain" value="{{ domain }}" required>
+              <span class="domain-card">
+                <span class="domain-index">0{{ loop.index }}</span>
+                <strong>{{ domain }}</strong>
+                <span class="arrow">↗</span>
+              </span>
+            </label>
+            {% endfor %}
+          </div>
+
+          <div class="actions">
+            <button type="button" class="back-btn">← Back</button>
+            <button type="button" class="next-btn">Continue <span>→</span></button>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step" data-step="3">
+          <div class="step-heading">
+            <span class="step-no">03</span>
+            <div>
+              <h2>Show us your spark.</h2>
+              <p>No experience? No problem. Tell us what excites you.</p>
+            </div>
+          </div>
+
+          <label class="field full">
+            <span>Why do you want to join KMS? *</span>
+            <textarea name="reason" rows="5" placeholder="What makes movies, stories or creating things exciting to you?" required></textarea>
+          </label>
+
+          <label class="field full">
+            <span>Previous experience <small>(optional)</small></span>
+            <textarea name="experience" rows="4" placeholder="Projects, college events, reels, theatre, editing, writing..."></textarea>
+          </label>
+
+          <label class="field full">
+            <span>Portfolio / Instagram link <small>(optional)</small></span>
+            <input name="portfolio" type="url" placeholder="https://...">
+          </label>
+
+          <div class="actions">
+            <button type="button" class="back-btn">← Back</button>
+            <button type="button" class="next-btn">Review <span>→</span></button>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step" data-step="4">
+          <div class="step-heading">
+            <span class="step-no">04</span>
+            <div>
+              <h2>Ready for your close-up?</h2>
+              <p>Review your application and send it our way.</p>
+            </div>
+          </div>
+
+          <div class="review-card" id="reviewCard"></div>
+
+          <label class="consent">
+            <input type="checkbox" id="consent" required>
+            <span>I confirm that the information provided is correct.</span>
+          </label>
+
+          <div class="actions">
+            <button type="button" class="back-btn">← Back</button>
+            <button type="submit" class="submit-btn">Submit Application <span>↗</span></button>
+          </div>
+        </div>
+      </form>
+
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">✓</div>
+        <div class="eyebrow">APPLICATION RECEIVED</div>
+        <h2>Cut! You’re in the queue.</h2>
+        <p>Your KMS recruitment application has been submitted successfully. Keep an eye on your mail and socials for the next update.</p>
+        <a href="/" class="restart-btn">Submit another application →</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
