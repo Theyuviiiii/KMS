@@ -7,13 +7,14 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="admin-page">
+<button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle dark mode">☾ Dark</button>
 <div class="admin-wrap">
   <div class="admin-head">
     <div>
       <div class="eyebrow">KMS — ADMIN</div>
       <h1>Applications</h1>
     </div>
-    <a href="/" class="back-link">← Recruitment page</a>
+    <div><a href="/" class="back-link">← Recruitment page</a> &nbsp; <a href="{{ url_for('admin_logout') }}" class="back-link">Logout</a></div>
   </div>
   <div class="admin-stat">{{ applications|length }} application{{ '' if applications|length == 1 else 's' }}</div>
   <div class="table-wrap">

@@ -1,8 +1,21 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+from functools import wraps
 import sqlite3
 import os
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "KMS_CHANGE_THIS_SECRET_KEY")
+
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "Yuvraj8707")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "Yuvraj8707")
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("admin_logged_in"):
+            return redirect(url_for("admin_login"))
+        return f(*args, **kwargs)
+    return decorated_function
 DB_PATH = os.path.join("database", "kms_recruitment.db")
 
 DOMAINS = [
@@ -67,7 +80,25 @@ def apply():
 
     return jsonify({"ok": True, "message": "Application submitted successfully!"})
 
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    error = None
+    if request.method == "POST":
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session["admin_logged_in"] = True
+            return redirect(url_for("admin"))
+        error = "Invalid username or password."
+    return render_template("admin_login.html", error=error)
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.clear()
+    return redirect(url_for("admin_login"))
+
 @app.route("/admin")
+@admin_required
 def admin():
     conn = get_db()
     applications = conn.execute(
@@ -78,4 +109,4 @@ def admin():
 
 if __name__ == "__main__":
     init_db()
-    app.run(host="127.0.0.1", port=8000, debug=True)
+    app.run(debug=True)

@@ -99,3 +99,29 @@ td a{color:#111}
   .step-heading h2{font-size:34px}
   .success-screen h2{font-size:38px}
 }
+
+/* Dark mode */
+.theme-toggle{position:fixed;top:22px;right:24px;z-index:20;border:1px solid #444;background:#fff;color:#111;border-radius:999px;padding:9px 14px;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.dark-mode{--ink:#f5f5f5;--muted:#aaa;--line:#333;--paper:#111}
+body.dark-mode{background:#090909;color:#f5f5f5}
+.dark-mode .form-panel,.dark-mode .admin-page{background:#111;color:#f5f5f5}
+.dark-mode .progress{background:#333}.dark-mode .progress div{background:#f5f5f5}
+.dark-mode input,.dark-mode select,.dark-mode textarea{color:#f5f5f5;border-color:#444}
+.dark-mode input::placeholder,.dark-mode textarea::placeholder{color:#777}
+.dark-mode .field>span,.dark-mode .step-heading p,.dark-mode .progress-label{color:#999}
+.dark-mode .domain-card{border-color:#444}.dark-mode .domain-card:hover{border-color:#777}
+.dark-mode .domain-option input:checked+.domain-card{background:#f5f5f5;color:#111;border-color:#f5f5f5}
+.dark-mode .review-card,.dark-mode .review-row{border-color:#333}
+.dark-mode .review-domain,.dark-mode .success-icon,.dark-mode .next-btn,.dark-mode .submit-btn,.dark-mode .admin-stat{background:#f5f5f5;color:#111}
+.dark-mode .table-wrap{background:#181818;border-color:#333}.dark-mode th,.dark-mode td{border-color:#2b2b2b}.dark-mode th{color:#999}.dark-mode td a,.dark-mode .back-link,.dark-mode .restart-btn{color:#f5f5f5}.dark-mode .tag{background:#333;color:#eee}
+.dark-mode .theme-toggle{background:#222;color:#f5f5f5;border-color:#555}
+
+/* Login page dark mode */
+.login-page{background:#f5f5f5;color:#111}
+.login-page.dark-mode{background:#0b0b0b;color:#f5f5f5}
+.login-page .login-card{background:#fff}
+.login-page.dark-mode .login-card{background:#171717;box-shadow:0 10px 35px rgba(0,0,0,.35)}
+.login-page.dark-mode input{background:#111;color:#fff;border-color:#444}
+.login-page.dark-mode input::placeholder{color:#777}
+.login-page.dark-mode .subtitle,.login-page.dark-mode .home{color:#999}
+.login-page.dark-mode button{background:#f5f5f5;color:#111}

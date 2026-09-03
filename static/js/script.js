@@ -84,3 +84,15 @@ form.addEventListener("submit", async (e) => {
     button.innerHTML = 'Submit Application <span>↗</span>';
   }
 });
+
+
+// KMS theme toggle
+(function(){
+  const b=document.getElementById("themeToggle");
+  if(!b) return;
+  const dark=localStorage.getItem("kms-theme")==="dark";
+  if(dark) document.body.classList.add("dark-mode");
+  const update=()=>{const on=document.body.classList.contains("dark-mode");b.textContent=on?"☀ Light":"☾ Dark";};
+  update();
+  b.addEventListener("click",()=>{const on=document.body.classList.toggle("dark-mode");localStorage.setItem("kms-theme",on?"dark":"light");update();});
+})();
