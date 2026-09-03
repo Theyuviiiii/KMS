@@ -3,6 +3,9 @@ __pycache__/
 *.pyc
 .env
 database/*.db
+<<<<<<< HEAD
 
 .vercel
 .env*
+=======
+>>>>>>> 9fbfff9e2e50d195eb083adbed75c6de29088e28
