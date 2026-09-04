@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, s
 from functools import wraps
 import sqlite3
 import os
+import json
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "change-this-in-vercel")
@@ -30,7 +33,7 @@ DOMAINS = [
 ]
 
 def get_db():
-    os.makedirs("database", exist_ok=True)
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
@@ -70,19 +73,56 @@ def apply():
     if data["domain"] not in DOMAINS:
         return jsonify({"ok": False, "message": "Please select a valid KMS domain."}), 400
 
-    conn = get_db()
-    conn.execute("""
-        INSERT INTO applications
-        (name, roll_no, branch, year, email, phone, domain, reason, experience, portfolio)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        data["name"].strip(), data["roll_no"].strip(), data["branch"].strip(),
-        data["year"].strip(), data["email"].strip(), data["phone"].strip(),
-        data["domain"].strip(), data["reason"].strip(),
-        data.get("experience", "").strip(), data.get("portfolio", "").strip()
-    ))
-    conn.commit()
-    conn.close()
+    db_saved = False
+    try:
+        conn = get_db()
+        conn.execute("""
+            INSERT INTO applications
+            (name, roll_no, branch, year, email, phone, domain, reason, experience, portfolio)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            data["name"].strip(), data["roll_no"].strip(), data["branch"].strip(),
+            data["year"].strip(), data["email"].strip(), data["phone"].strip(),
+            data["domain"].strip(), data["reason"].strip(),
+            data.get("experience", "").strip(), data.get("portfolio", "").strip()
+        ))
+        conn.commit()
+        conn.close()
+        db_saved = True
+    except Exception as exc:
+        # Vercel's serverless filesystem may be read-only. Google Sheets is the
+        # durable store when the Apps Script URL is configured.
+        app.logger.warning("SQLite save skipped: %s", exc)
+
+    # Mirror the complete application to Google Sheets when an Apps Script
+    # web-app endpoint is configured. The local DB remains the admin fallback.
+    sheet_saved = False
+    sheet_url = os.environ.get("GOOGLE_APPS_SCRIPT_URL", "").strip()
+    if sheet_url:
+        payload = {
+            "name": data["name"].strip(),
+            "roll_no": data["roll_no"].strip(),
+            "branch": data["branch"].strip(),
+            "year": data["year"].strip(),
+            "email": data["email"].strip(),
+            "phone": data["phone"].strip(),
+            "domain": data["domain"].strip(),
+            "reason": data["reason"].strip(),
+            "experience": data.get("experience", "").strip(),
+            "portfolio": data.get("portfolio", "").strip(),
+        }
+        try:
+            body = json.dumps(payload).encode("utf-8")
+            req = Request(sheet_url, data=body, headers={"Content-Type": "application/json"}, method="POST")
+            with urlopen(req, timeout=8) as response:
+                if response.status >= 400:
+                    raise RuntimeError(f"Google Sheets endpoint returned {response.status}")
+        except (URLError, HTTPError, RuntimeError, TimeoutError) as exc:
+            # Do not reject the applicant if the external sheet is temporarily down.
+            app.logger.warning("Google Sheets sync failed: %s", exc)
+
+    if not db_saved and not sheet_saved:
+        return jsonify({"ok": False, "message": "We could not save your application right now. Please try again in a moment."}), 500
 
     return jsonify({"ok": True, "message": "Application submitted successfully!"})
 
@@ -114,6 +154,7 @@ def admin():
     google_sheet_url = os.environ.get("GOOGLE_SHEET_URL", "https://docs.google.com/spreadsheets/d/1QTdTy3Va6bKMeYTg9DQw7-mF-QX5NgBiT6RgvpPehpU/edit?usp=sharing")
     return render_template("admin.html", applications=applications, google_sheet_url=google_sheet_url)
 
+init_db()
+
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True)

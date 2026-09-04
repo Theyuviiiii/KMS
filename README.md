@@ -29,3 +29,18 @@ Recommended:
 - `GOOGLE_SHEET_URL`
 
 SQLite is retained for simple/local use. For production-scale persistent submissions on Vercel, use a managed database or Google Sheets/API storage.
+
+
+## Google Sheets automatic sync
+
+The recruitment form can automatically append every submitted application to the configured Google Sheet.
+
+1. Open the `google_apps_script/Code.gs` file included in this project.
+2. Paste it into **Extensions → Apps Script** in your Google Sheet.
+3. Deploy it as a **Web app**, execute as yourself, and allow access for anyone.
+4. Copy the generated Web App URL.
+5. In Vercel, add an environment variable named `GOOGLE_APPS_SCRIPT_URL` containing that URL, for Production.
+
+The sheet will receive: Timestamp, Name, Roll Number, Branch, Year, Email, Phone, Domain, Why KMS, Previous Experience, and Portfolio.
+
+The admin Applications page keeps the **Open Google Sheet** button and shows the complete application details with a View dialog.
