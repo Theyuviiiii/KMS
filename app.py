@@ -111,7 +111,8 @@ def admin():
         "SELECT * FROM applications ORDER BY id DESC"
     ).fetchall()
     conn.close()
-    return render_template("admin.html", applications=applications)
+    google_sheet_url = os.environ.get("GOOGLE_SHEET_URL", "https://docs.google.com/spreadsheets/d/1QTdTy3Va6bKMeYTg9DQw7-mF-QX5NgBiT6RgvpPehpU/edit?usp=sharing")
+    return render_template("admin.html", applications=applications, google_sheet_url=google_sheet_url)
 
 if __name__ == "__main__":
     init_db()
