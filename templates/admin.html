@@ -35,5 +35,7 @@
     </table>
   </div>
 </div>
-</body>
+<script>
+(function(){const b=document.getElementById("themeToggle");if(!b)return;if(localStorage.getItem("kms-theme")==="dark")document.body.classList.add("dark-mode");function u(){b.textContent=document.body.classList.contains("dark-mode")?"☀ Light":"☾ Dark"}u();b.onclick=()=>{document.body.classList.toggle("dark-mode");localStorage.setItem("kms-theme",document.body.classList.contains("dark-mode")?"dark":"light");u()}})();
+</script></body>
 </html>

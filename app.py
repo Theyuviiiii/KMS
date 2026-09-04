@@ -4,7 +4,12 @@ import sqlite3
 import os
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET_KEY", "KMS_CHANGE_THIS_SECRET_KEY")
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "change-this-in-vercel")
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=os.environ.get("VERCEL", "").lower() == "1",
+)
 
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "Yuvraj8707")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "Yuvraj8707")
@@ -16,7 +21,8 @@ def admin_required(f):
             return redirect(url_for("admin_login"))
         return f(*args, **kwargs)
     return decorated_function
-DB_PATH = os.path.join("database", "kms_recruitment.db")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "database", "kms_recruitment.db")
 
 DOMAINS = [
     "Acting", "Direction", "Cinematography", "Editing",
